@@ -1,0 +1,27 @@
+<form id="donation-form">
+  <label for="amount">Donation Amount:</label>
+  <input type="number" id="amount" name="amount">
+  <button id="donate-btn">Donate Now</button>
+</form>
+<script>
+    const stripe = Stripe('pk_test_51HvFj2eZvKYlo2C9XbVpFMK1234567890abcdef');
+
+document.getElementById('donate-btn').addEventListener('click', function() {
+  const amount = document.getElementById('amount').value;
+  fetch('/create-checkout-session', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ amount: amount })
+  })
+  .then(response => response.json())
+  .then(data => {
+    stripe.redirectToCheckout({ sessionId: data.sessionId });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+});
+</script>
+<script src="Node.js"></script>
